@@ -2,8 +2,10 @@ package com.enterpriseflow.project.service;
 
 import com.enterpriseflow.project.dto.CreateProjectRequest;
 import com.enterpriseflow.project.dto.ProjectResponse;
+import com.enterpriseflow.project.dto.UpdateProjectRequest;
 import com.enterpriseflow.project.entity.Project;
 import com.enterpriseflow.project.repository.ProjectRepository;
+import com.enterpriseflow.task.repository.TaskRepository;
 import com.enterpriseflow.tenant.entity.Tenant;
 import com.enterpriseflow.tenant.repository.TenantRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +21,15 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final TenantRepository tenantRepository;
+    private final TaskRepository taskRepository;
 
     public ProjectService(
             ProjectRepository projectRepository,
-            TenantRepository tenantRepository) {
+            TenantRepository tenantRepository,
+            TaskRepository taskRepository) {
         this.projectRepository = projectRepository;
         this.tenantRepository = tenantRepository;
+        this.taskRepository = taskRepository;
     }
 
     @Transactional
@@ -69,5 +74,48 @@ public class ProjectService {
                 ));
 
         return ProjectResponse.from(project);
+    }
+
+    @Transactional
+    public ProjectResponse update(
+            UUID tenantId,
+            UUID projectId,
+            UpdateProjectRequest request) {
+
+        Project project = projectRepository
+                .findByIdAndTenant_Id(projectId, tenantId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Project not found"
+                ));
+
+        project.updateDetails(
+                request.name(),
+                request.description()
+        );
+
+        return ProjectResponse.from(project);
+    }
+
+    @Transactional
+    public void delete(
+            UUID tenantId,
+            UUID projectId) {
+
+        Project project = projectRepository
+                .findByIdAndTenant_Id(projectId, tenantId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Project not found"
+                ));
+
+        if (taskRepository.existsByProject_Id(projectId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Cannot delete a project containing tasks"
+            );
+        }
+
+        projectRepository.delete(project);
     }
 }

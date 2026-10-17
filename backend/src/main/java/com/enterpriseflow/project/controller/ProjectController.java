@@ -2,6 +2,7 @@ package com.enterpriseflow.project.controller;
 
 import com.enterpriseflow.project.dto.CreateProjectRequest;
 import com.enterpriseflow.project.dto.ProjectResponse;
+import com.enterpriseflow.project.dto.UpdateProjectRequest;
 import com.enterpriseflow.project.service.ProjectService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -47,5 +48,30 @@ public class ProjectController {
             @PathVariable UUID projectId) {
 
         return projectService.findById(tenantId, projectId);
+    }
+
+    @PutMapping("/{projectId}")
+    public ProjectResponse update(
+            @PathVariable UUID tenantId,
+            @PathVariable UUID projectId,
+            @Valid @RequestBody UpdateProjectRequest request) {
+
+        return projectService.update(
+                tenantId,
+                projectId,
+                request
+        );
+    }
+
+    @DeleteMapping("/{projectId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(
+            @PathVariable UUID tenantId,
+            @PathVariable UUID projectId) {
+
+        projectService.delete(
+                tenantId,
+                projectId
+        );
     }
 }

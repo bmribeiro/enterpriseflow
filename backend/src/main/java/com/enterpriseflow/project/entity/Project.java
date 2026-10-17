@@ -62,4 +62,12 @@ public class Project {
     public String getDescription() {
         return description;
     }
+
+    public void updateDetails(
+            String name,
+            String description) {
+
+        this.name = name;
+        this.description = description;
+    }
 }

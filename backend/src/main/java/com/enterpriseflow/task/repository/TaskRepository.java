@@ -10,12 +10,16 @@ import java.util.UUID;
 public interface TaskRepository
         extends JpaRepository<Task, UUID> {
 
-    List<Task> findByProject_Id(UUID projectId);
-
-    List<Task> findByProject_Tenant_Id(UUID tenantId);
-
-    Optional<Task> findByIdAndProject_Tenant_Id(
-            UUID taskId,
+    List<Task> findByProject_IdAndProject_Tenant_Id(
+            UUID projectId,
             UUID tenantId
     );
+
+    Optional<Task> findByIdAndProject_IdAndProject_Tenant_Id(
+            UUID taskId,
+            UUID projectId,
+            UUID tenantId
+    );
+
+    boolean existsByProject_Id(UUID projectId);
 }

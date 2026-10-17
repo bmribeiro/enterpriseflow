@@ -61,4 +61,15 @@ public class Task {
     public TaskStatus getStatus() {
         return status;
     }
+
+    public void updateDetails(
+            String title,
+            TaskStatus status) {
+
+        this.title = title;
+        this.status = java.util.Objects.requireNonNull(
+                status,
+                "Task status cannot be null"
+        );
+    }
 }
