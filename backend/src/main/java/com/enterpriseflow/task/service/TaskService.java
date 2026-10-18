@@ -8,6 +8,7 @@ import com.enterpriseflow.task.dto.UpdateTaskRequest;
 import com.enterpriseflow.task.entity.Task;
 import com.enterpriseflow.task.repository.TaskRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,6 +17,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@PreAuthorize(
+        "@tenantAccessService.isMember(#p0, authentication)"
+)
 public class TaskService {
 
     private final TaskRepository taskRepository;
