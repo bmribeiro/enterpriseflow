@@ -1,0 +1,60 @@
+
+<section class="task-page">
+
+  <h1>Gestão de Tarefas</h1>
+  <p>EnterpriseFlow — Gestão de tarefas</p>
+
+  <div class="summary">
+    <div>
+      <strong>{{ totalTasks() }}</strong>
+      <span>Total</span>
+    </div>
+
+    <div>
+      <strong>{{ completedTasks() }}</strong>
+      <span>Concluídas</span>
+    </div>
+
+    <div>
+      <strong>{{ pendingTasks() }}</strong>
+      <span>Pendentes</span>
+    </div>
+  </div>
+
+  <div class="task-form">
+    <input
+      #taskTitle
+      type="text"
+      placeholder="Descrição da tarefa"
+      aria-label="Descrição da nova tarefa"
+      (keydown.enter)="addTask(taskTitle.value); taskTitle.value = ''"
+    />
+
+    <button
+      type="button"
+      (click)="addTask(taskTitle.value); taskTitle.value = ''">
+      Adicionar
+    </button>
+  </div>
+
+  <ul class="task-list">
+    @for (task of tasks(); track task.id) {
+      <li>
+        <label>
+          <input
+            type="checkbox"
+            [checked]="task.status === 'DONE'"
+            (change)="toggleTask(task.id)"
+          />
+
+          <span [class.completed]="task.status === 'DONE'">
+            {{ task.title }}
+          </span>
+        </label>
+      </li>
+    } @empty {
+      <li>Não existem tarefas.</li>
+    }
+  </ul>
+
+</section>

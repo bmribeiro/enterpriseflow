@@ -1,0 +1,32 @@
+
+<header class="header">
+  <div class="brand">
+    <a routerLink="/dashboard">
+      EnterpriseFlow
+    </a>
+  </div>
+
+  <nav class="navigation">
+    <a
+      routerLink="/dashboard"
+      routerLinkActive="active">
+      Dashboard
+    </a>
+
+    <a
+      routerLink="/tasks"
+      routerLinkActive="active">
+      Tarefas
+    </a>
+  </nav>
+
+  <div class="account">
+    <a routerLink="/login">
+      Login
+    </a>
+  </div>
+</header>
+
+<main class="main-content">
+  <router-outlet />
+</main>
