@@ -1,4 +1,22 @@
-<section>
-  <h1>Autenticação</h1>
-  <p>Autenticação OAuth2/OIDC em desenvolvimento.</p>
+
+<section class="login-page">
+
+  <h1>EnterpriseFlow</h1>
+  <h2>Autenticação</h2>
+
+  <p>
+    Inicie sessão através do Authorization Server.
+  </p>
+
+  <button
+    type="button"
+    [disabled]="loading()"
+    (click)="login()">
+    {{ loading() ? 'A redirecionar...' : 'Iniciar sessão' }}
+  </button>
+
+  @if (error()) {
+    <p role="alert">{{ error() }}</p>
+  }
+
 </section>

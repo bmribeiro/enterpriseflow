@@ -2,9 +2,44 @@
 <section class="task-page">
 
   <h1>Gestão de Tarefas</h1>
-  <p>EnterpriseFlow — Gestão de tarefas</p>
+
+  <p>EnterpriseFlow — Integração REST</p>
+
+  <button
+    type="button"
+    [disabled]="loading()"
+    (click)="loadTasks()">
+    Atualizar tarefas
+  </button>
+
+  
+<form
+  class="task-form"
+  (submit)="$event.preventDefault(); createTask(taskTitle)">
+
+  <input
+    #taskTitle
+    type="text"
+    placeholder="Descrição da nova tarefa"
+    aria-label="Descrição da nova tarefa"
+    maxlength="200"
+    required
+    [disabled]="creating()"
+  />
+
+  <button
+    type="submit"
+    [disabled]="creating()">
+
+    {{ creating() ? 'A guardar...' : 'Criar tarefa' }}
+
+  </button>
+
+</form>
+
 
   <div class="summary">
+
     <div>
       <strong>{{ totalTasks() }}</strong>
       <span>Total</span>
@@ -17,44 +52,43 @@
 
     <div>
       <strong>{{ pendingTasks() }}</strong>
-      <span>Pendentes</span>
+      <span>Não concluídas</span>
     </div>
+
   </div>
 
-  <div class="task-form">
-    <input
-      #taskTitle
-      type="text"
-      placeholder="Descrição da tarefa"
-      aria-label="Descrição da nova tarefa"
-      (keydown.enter)="addTask(taskTitle.value); taskTitle.value = ''"
-    />
+  @if (loading()) {
 
-    <button
-      type="button"
-      (click)="addTask(taskTitle.value); taskTitle.value = ''">
-      Adicionar
-    </button>
-  </div>
+    <p role="status">A carregar tarefas...</p>
 
-  <ul class="task-list">
-    @for (task of tasks(); track task.id) {
-      <li>
-        <label>
-          <input
-            type="checkbox"
-            [checked]="task.status === 'DONE'"
-            (change)="toggleTask(task.id)"
-          />
+  } @else if (error()) {
 
-          <span [class.completed]="task.status === 'DONE'">
-            {{ task.title }}
-          </span>
-        </label>
-      </li>
-    } @empty {
-      <li>Não existem tarefas.</li>
-    }
-  </ul>
+    <p role="alert">{{ error() }}</p>
+
+  } @else {
+
+    <ul class="task-list">
+
+      @for (task of tasks(); track task.id) {
+
+        <li>
+          <strong>{{ task.title }}</strong>
+
+          <p>Estado: {{ task.status }}</p>
+
+          <small>
+            ID: {{ task.id }}
+          </small>
+        </li>
+
+      } @empty {
+
+        <li>Não existem tarefas neste projeto.</li>
+
+      }
+
+    </ul>
+
+  }
 
 </section>

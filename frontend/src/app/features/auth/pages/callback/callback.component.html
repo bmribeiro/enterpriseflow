@@ -1,0 +1,11 @@
+
+<section>
+  <h1>Autenticação EnterpriseFlow</h1>
+
+  @if (error()) {
+    <p role="alert">{{ error() }}</p>
+    <a routerLink="/login">Voltar ao login</a>
+  } @else {
+    <p>A concluir a autenticação...</p>
+  }
+</section>

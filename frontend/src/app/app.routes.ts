@@ -1,5 +1,6 @@
 
 import { Routes } from '@angular/router';
+import { authGuard } from './core/auth/auth.guard';
 
 export const routes: Routes = [
   {
@@ -10,7 +11,15 @@ export const routes: Routes = [
         .then(m => m.LoginComponent)
   },
   {
+    path: 'auth/callback',
+    title: 'Autenticação | EnterpriseFlow',
+    loadComponent: () =>
+      import('./features/auth/pages/callback/callback.component')
+        .then(m => m.CallbackComponent)
+  },
+  {
     path: '',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./core/layout/layout.component')
         .then(m => m.LayoutComponent),
