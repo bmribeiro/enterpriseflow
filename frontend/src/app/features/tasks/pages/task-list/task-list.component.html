@@ -1,41 +1,26 @@
-
 <section class="task-page">
 
   <h1>Gestão de Tarefas</h1>
 
   <p>EnterpriseFlow — Integração REST</p>
 
-  <button
-    type="button"
-    [disabled]="loading()"
-    (click)="loadTasks()">
+  <button type="button" [disabled]="loading()" (click)="loadTasks()">
     Atualizar tarefas
   </button>
 
-  
-<form
-  class="task-form"
-  (submit)="$event.preventDefault(); createTask(taskTitle)">
 
-  <input
-    #taskTitle
-    type="text"
-    placeholder="Descrição da nova tarefa"
-    aria-label="Descrição da nova tarefa"
-    maxlength="200"
-    required
-    [disabled]="creating()"
-  />
+  <form class="task-form" (submit)="$event.preventDefault(); createTask(taskTitle)">
 
-  <button
-    type="submit"
-    [disabled]="creating()">
+    <input #taskTitle type="text" placeholder="Descrição da nova tarefa" aria-label="Descrição da nova tarefa"
+      maxlength="200" required [disabled]="creating()" />
 
-    {{ creating() ? 'A guardar...' : 'Criar tarefa' }}
+    <button type="submit" [disabled]="creating()">
 
-  </button>
+      {{ creating() ? 'A guardar...' : 'Criar tarefa' }}
 
-</form>
+    </button>
+
+  </form>
 
 
   <div class="summary">
@@ -57,37 +42,89 @@
 
   </div>
 
+  @if (updateError()) {
+  <p role="alert">{{ updateError() }}</p>
+  }
+
+  @if (deleteError()) {
+  <p role="alert">{{ deleteError() }}</p>
+  }
+
   @if (loading()) {
 
-    <p role="status">A carregar tarefas...</p>
+  <p role="status">A carregar tarefas...</p>
 
   } @else if (error()) {
 
-    <p role="alert">{{ error() }}</p>
+  <p role="alert">{{ error() }}</p>
 
   } @else {
 
-    <ul class="task-list">
+  <ul class="task-list">
 
-      @for (task of tasks(); track task.id) {
+    @for (task of tasks(); track task.id) {
 
-        <li>
-          <strong>{{ task.title }}</strong>
 
-          <p>Estado: {{ task.status }}</p>
+    <li class="task-item">
 
-          <small>
-            ID: {{ task.id }}
-          </small>
-        </li>
+      <div class="task-edit">
 
-      } @empty {
+        <label>
+          Título
 
-        <li>Não existem tarefas neste projeto.</li>
+          <input #editTitle type="text" [value]="task.title" maxlength="200" required
+            [disabled]="updatingId() !== null" />
+        </label>
 
-      }
+        <label>
+          Estado
 
-    </ul>
+          <select #editStatus [value]="task.status" [disabled]="updatingId() !== null">
+
+            <option value="TODO">Por iniciar</option>
+            <option value="IN_PROGRESS">Em execução</option>
+            <option value="DONE">Concluída</option>
+
+          </select>
+        </label>
+
+        <button type="button" [disabled]="updatingId() !== null" (click)="updateTask(
+        task,
+        editTitle.value,
+        editStatus.value
+      )">
+
+          {{ updatingId() === task.id
+          ? 'A guardar...'
+          : 'Guardar alterações' }}
+
+        </button>
+
+
+        <button type="button" class="delete-button" [disabled]="deletingId() !== null || updatingId() !== null"
+          (click)="deleteTask(task)">
+
+          {{ deletingId() === task.id
+          ? 'A eliminar...'
+          : 'Eliminar' }}
+
+        </button>
+
+
+      </div>
+
+      <small>ID: {{ task.id }}</small>
+
+    </li>
+
+
+    } @empty {
+
+    <li>Não existem tarefas neste projeto.</li>
+
+    }
+
+  </ul>
 
   }
 
