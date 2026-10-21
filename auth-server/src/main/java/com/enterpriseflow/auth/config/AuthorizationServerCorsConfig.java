@@ -1,6 +1,6 @@
-
 package com.enterpriseflow.auth.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,12 +15,14 @@ import java.util.List;
 public class AuthorizationServerCorsConfig {
 
     @Bean
-    public FilterRegistrationBean<CorsFilter> authorizationServerCorsFilter() {
+    public FilterRegistrationBean<CorsFilter> authorizationServerCorsFilter(
+            @Value("${app.cors.allowed-origins:http://localhost:4200}")
+            String allowedOrigins) {
 
         CorsConfiguration cors = new CorsConfiguration();
 
         cors.setAllowedOrigins(
-                List.of("http://localhost:4200")
+                List.of(allowedOrigins.split("\\s*,\\s*"))
         );
 
         cors.setAllowedMethods(
@@ -43,6 +45,10 @@ public class AuthorizationServerCorsConfig {
 
         source.registerCorsConfiguration(
                 "/oauth2/token", cors
+        );
+
+        source.registerCorsConfiguration(
+                "/oauth2/jwks", cors
         );
 
         FilterRegistrationBean<CorsFilter> registration =

@@ -24,7 +24,7 @@ export class AuthService {
   private readonly userManager = new UserManager({
     authority: 'http://localhost:9000',
     client_id: 'enterpriseflow-projects',
-    redirect_uri: 'http://localhost:4200/auth/callback',
+    redirect_uri: `${window.location.origin}/auth/callback`,
     response_type: 'code',
     scope: 'openid profile projects.read projects.write',
 
