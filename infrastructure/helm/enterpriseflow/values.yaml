@@ -1,0 +1,60 @@
+backend:
+  replicaCount: 1
+
+  image:
+    repository: ghcr.io/bmribeiro/enterpriseflow-backend
+    tag: "sha-96ddfe81af78be7b595f2288f185db909fd360c5"
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 8080
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+frontend:
+  replicaCount: 1
+
+  image:
+    repository: ghcr.io/bmribeiro/enterpriseflow-frontend
+    tag: "sha-96ddfe81af78be7b595f2288f185db909fd360c5"
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 128Mi
+
+
+authServer:
+  replicaCount: 1
+
+  image:
+    repository: ghcr.io/bmribeiro/enterpriseflow-auth-server
+    tag: "sha-96ddfe81af78be7b595f2288f185db909fd360c5"
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 9000
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi

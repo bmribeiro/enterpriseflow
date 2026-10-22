@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "enterpriseflow.fullname" . }}-frontend
+  labels:
+    {{- include "enterpriseflow.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.frontend.replicaCount }}
+  selector:
+    matchLabels:
+      app: enterpriseflow-frontend
+  template:
+    metadata:
+      labels:
+        app: enterpriseflow-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          ports:
+            - containerPort: 80
+          env:
+            - name: BACKEND_UPSTREAM
+              value: "{{ include "enterpriseflow.fullname" . }}-backend:8080"
+          resources:
+            {{- toYaml .Values.frontend.resources | nindent 12 }}

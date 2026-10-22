@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "enterpriseflow.fullname" . }}-auth-server
+spec:
+  type: {{ .Values.authServer.service.type }}
+  selector:
+    app: enterpriseflow-auth-server
+  ports:
+    - name: http
+      port: {{ .Values.authServer.service.port }}
+      targetPort: 9000
+      protocol: TCP

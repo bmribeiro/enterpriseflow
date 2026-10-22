@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "enterpriseflow.fullname" . }}-backend
+  labels:
+    {{- include "enterpriseflow.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels:
+      app: enterpriseflow-backend
+  template:
+    metadata:
+      labels:
+        app: enterpriseflow-backend
+    spec:
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "vps"
+
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres.enterpriseflow.svc.cluster.local:5432/enterpriseflow"
+
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "enterpriseflow"
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_PASSWORD
+
+            - name: AUTH_JWK_SET_URI
+              value: "http://{{ include "enterpriseflow.fullname" . }}-auth-server:9000/oauth2/jwks"
+
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}

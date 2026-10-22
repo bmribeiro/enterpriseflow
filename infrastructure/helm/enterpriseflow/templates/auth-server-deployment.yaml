@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "enterpriseflow.fullname" . }}-auth-server
+spec:
+  replicas: {{ .Values.authServer.replicaCount }}
+  selector:
+    matchLabels:
+      app: enterpriseflow-auth-server
+  template:
+    metadata:
+      labels:
+        app: enterpriseflow-auth-server
+    spec:
+      containers:
+        - name: auth-server
+          image: "{{ .Values.authServer.image.repository }}:{{ .Values.authServer.image.tag }}"
+          imagePullPolicy: {{ .Values.authServer.image.pullPolicy }}
+          ports:
+            - containerPort: 9000
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: vps
+            - name: AUTH_DEMO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: auth-credentials
+                  key: AUTH_DEMO_PASSWORD
+          resources:
+            {{- toYaml .Values.authServer.resources | nindent 12 }}
