@@ -1,4 +1,4 @@
 export const DEV_CONTEXT = {
-  tenantId: '11111111-1111-4111-8111-111111111111',
-  projectId: '0b3baed1-be8d-4f52-9018-18f0bceb3030'
+  tenantId: 'e1465f0f-ded3-4a07-84be-5833494717a3',
+  projectId: '83ebd530-87c8-4a38-aa54-3d8307a387a8'
 } as const;
