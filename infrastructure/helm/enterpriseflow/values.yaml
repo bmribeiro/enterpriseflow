@@ -23,7 +23,7 @@ frontend:
 
   image:
     repository: ghcr.io/bmribeiro/enterpriseflow-frontend
-    tag: "sha-96ddfe81af78be7b595f2288f185db909fd360c5"
+    tag: "sha-3be59f1cb7c87f0feb2ce036c4e0c97e63f013bc"
     pullPolicy: IfNotPresent
 
   service:
